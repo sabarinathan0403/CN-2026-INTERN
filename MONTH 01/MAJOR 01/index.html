@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Signal — Product Sentiment Dashboard</title>
+<link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+<meta name="theme-color" content="#14171C">
+<link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/icon-192.png') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wordmark">
+      <span class="wordmark-mark">Signal</span>
+      <span class="wordmark-sub">reads what buyers actually think</span>
+    </div>
+    <div class="search-panel">
+      <input type="text" id="productInput" placeholder="Search a product — e.g. Bluetooth Headphones" />
+      <select id="sourceSelect">
+        <option value="flipkart">Flipkart</option>
+        <option value="amazon">Amazon</option>
+      </select>
+      <button id="analyzeBtn">Read reviews</button>
+    </div>
+  </header>
+
+  <div class="subbar">
+    <label class="mock-toggle">
+      <input type="checkbox" id="mockToggle" checked>
+      Use sample data
+    </label>
+    <span id="status"></span>
+  </div>
+
+  <main>
+    <section class="products-panel">
+      <span class="section-label">Tracked</span>
+      <div id="productList" class="product-list">
+        <p class="empty-note">Nothing tracked yet — search a product above to pull its reviews in.</p>
+      </div>
+    </section>
+
+    <section id="dashboard" class="dashboard hidden">
+      <div class="product-heading">
+        <h1 id="productTitle">Product</h1>
+        <p id="productMeta">0 reviews</p>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat"><span id="positivePct" class="stat-number positive">0%</span><label>Positive</label></div>
+        <div class="stat"><span id="negativePct" class="stat-number negative">0%</span><label>Negative</label></div>
+        <div class="stat"><span id="neutralPct" class="stat-number neutral">0%</span><label>Neutral</label></div>
+        <div class="stat"><span id="avgScore" class="stat-number">0</span><label>Average score</label></div>
+      </div>
+
+      <div class="charts-row">
+        <div class="chart-box">
+          <h3>Sentiment split</h3>
+          <canvas id="pieChart"></canvas>
+        </div>
+        <div class="chart-box">
+          <h3>How sentiment moved over time</h3>
+          <canvas id="lineChart"></canvas>
+        </div>
+        <div class="chart-box">
+          <h3>Words that come up most</h3>
+          <canvas id="barChart"></canvas>
+        </div>
+      </div>
+
+      <div class="reviews-section">
+        <h3>What people are saying</h3>
+        <div id="reviewsList" class="reviews-list"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js').catch(() => {});
+    }
+  </script>
+</body>
+</html>
